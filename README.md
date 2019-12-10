@@ -7,6 +7,8 @@ pip install matplotlib
 
 pip install sklearn==0.20.0
 
+pip install tensorflow==1.12.0
+
 pip install keras==2.2.0
 
 
