@@ -151,7 +151,7 @@ class LetterClasifier:
 
     
 
-        self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose,validation_data=(valid_X, valid_label))
+        self.history = self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose,validation_data=(valid_X, valid_label))
  
         # guardamos la red, para reutilizarla en el futuro, sin tener que volver a entrenar
         self.model.save("model.h5py")
@@ -186,3 +186,23 @@ if __name__ == "__main__":
     m.train(epochs = 400,batch_size = 128,verbose=1)
     m.evaluate(verbose=0)
     m.show()
+
+    try:
+        
+        plt.plot(m.history.history['acc'])
+        plt.plot(m.history.history['val_acc'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
+        # summarize history for loss
+        plt.plot(m.history.history['loss'])
+        plt.plot(m.history.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
+    except:
+        pass
