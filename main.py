@@ -13,17 +13,38 @@ from keras.layers.advanced_activations import LeakyReLU
 
 
 class LetterClasifier:
-        
+
+    # Codificación de las clases
     clases = {'A':0, 'E':1, 'I':2, 'O':3, 'U':4, 'a':5, 'e':6, 'i':7, 'o':8, 'u':9}
     id_class = ['A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u']
     
     
     def __init__(self):
+        '''
+        Constructor.
+
+        Argumentos:
+            - self : Objeto
+            
+        Return:
+            - Objeto
+        '''
         self.images = []
         self.labels = []
         
         
-    def generateModel(self,verbose=0):
+    def generateModel(self, verbose=0):
+        '''
+        Genera el modelo CNN, con el cual resolver el problema.
+
+        Argumentos:
+            - self : Objeto
+            - verbose : Imprime informacion sobre lo que sucede.
+            
+        Return:
+            - Modelo sin entrenar
+        '''
+
         INIT_LR = 1e-3
         
         classes = np.unique(self.y)
@@ -34,52 +55,75 @@ class LetterClasifier:
         model.add(LeakyReLU(alpha=0.1))
         model.add(MaxPooling2D((2, 2),padding='same'))
         model.add(Dropout(0.5))
-         
+
         model.add(Flatten())
         model.add(Dense(32, activation='linear'))
         model.add(LeakyReLU(alpha=0.1))
         model.add(Dropout(0.5)) 
         model.add(Dense(nClasses, activation='softmax'))
-        if verbose:    
+
+        if verbose:
             model.summary()
-         
+
         model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(INIT_LR),metrics=['accuracy'])
 
         self.model = model
+
         return model
 
         
-    def load_images(self,dirname="out/",verbose=1):
-        if verbose:
-            print("leyendo imagenes de ",dirname)
+    def load_images(self, dirname="out/", verbose=1):
+        '''
+        Carga las imagenes.
 
+        Argumentos:
+            - self : Objeto.
+            - dirname : Raiz del dataset.
+            - verbose : Imprime informacion sobre lo que sucede.
+            
+        Return:
+            - Modelo sin entrenar
+        '''
+
+        if verbose:
+            print("leyendo imagenes de ", dirname)
+
+        # Lee todas las imagenes que se encuentren en el directorio.
         for filename in os.listdir(dirname):
             
-            image = plt.imread(dirname+ filename)
+            image = plt.imread(dirname + filename)
             
-            
-            self.images.append(np.expand_dims(image, axis=0))
+            # Guarda la imagen y la clase.
+            self.images.append( np.expand_dims(image, axis=0) )
             self.labels.append(self.clases[filename[-5]])
             
 
+        # Convierte de lista a numpy
         self.y = np.array(self.labels)
-        self.X = np.array(self.images) #convierto de lista a numpy
-
-        # Find the unique numbers from the train labels
-        classes = np.unique(self.y)
-        nClasses = len(classes)
+        self.X = np.array(self.images)
         
         self.generateModel()
-        if verbose:            
+
+        if verbose:
+
+            # Find the unique numbers from the train labels
+            classes = np.unique(self.y)
+            nClasses = len(classes)
+
             print('Imagenes leidas:',len(self.images))
             print('Total number of outputs : ', nClasses)
             print('Output classes : ', classes)
+
             
             
-    def setModel(self,model):
+    def setModel(self, model):
         self.model = model
-        
+
+
+
+
     def train(self,epochs = 50,batch_size = 128,test_size=0.2,verbose=1):
+
         if os.path.exists("model.h5py"):
             self.load()
             return -1
