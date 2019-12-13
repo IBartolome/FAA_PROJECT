@@ -11,6 +11,8 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 
+from utils import delete_background
+
 
 class LetterClasifier:
 
@@ -92,6 +94,8 @@ class LetterClasifier:
         for filename in os.listdir(dirname):
             
             image = plt.imread(dirname + filename)
+
+            image = delete_background(image)
             
             # Guarda la imagen y la clase.
             self.images.append( np.expand_dims(image, axis=0) )
