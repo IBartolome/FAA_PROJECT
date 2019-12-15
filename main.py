@@ -11,7 +11,7 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 
-from utils import delete_background
+from utils import delete_background, transform_image
 
 
 class LetterClasifier:
@@ -74,7 +74,7 @@ class LetterClasifier:
         return model
 
         
-    def load_images(self, dirname="out/", verbose=1):
+    def load_images(self, dirname="out/", verbose=1, background=1):
         '''
         Carga las imagenes.
 
@@ -95,7 +95,12 @@ class LetterClasifier:
             
             image = plt.imread(dirname + filename)
 
-            image = delete_background(image)
+
+            # Si el flag está activo elimina el fondo
+            if background == 1:
+
+                image = delete_background(image)
+
             
             # Guarda la imagen y la clase.
             self.images.append( np.expand_dims(image, axis=0) )
@@ -126,40 +131,65 @@ class LetterClasifier:
 
 
 
-    def train(self,epochs = 50,batch_size = 128,test_size=0.2,verbose=1):
+    def train(self, epochs = 50, batch_size = 128, test_size=0.2, verbose=1, transform=1):
 
         if os.path.exists("model.h5py"):
             self.load()
             return -1
+
         
         train_X,test_X,train_Y,test_Y = train_test_split(self.X,self.y,test_size=test_size)
+
         if verbose:
             print('Training data shape : ', train_X.shape, train_Y.shape)
             print('Testing data shape : ', test_X.shape, test_Y.shape)
-         
+
         train_X = train_X.astype('float32')
         test_X = test_X.astype('float32')
-        
-         
+
+
         # Change the labels from categorical to one-hot encoding
         train_Y_one_hot = to_categorical(train_Y)
+
         if verbose: 
             # Display the change for category label using one-hot encoding
             print('Original label:', train_Y[0])
             print('After conversion to one-hot:', train_Y_one_hot[0])
-         
+
+
+
         train_X,valid_X,train_label,valid_label = train_test_split(train_X, train_Y_one_hot, test_size=test_size, random_state=13)
+
         if verbose:
             print(train_X.shape,valid_X.shape,train_label.shape,valid_label.shape)
 
 
-    
+        # Data Augmentation
+        if transform == 1:
 
-        self.history = self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose,validation_data=(valid_X, valid_label))
+            images_transform = []
+            labels_transform = []
+
+            for index, img in enumerate(train_X):
+
+                aux_list = transform_image(img)
+
+                images_transform += aux_list
+                labels_transform += [ train_label[index] for _ in aux_list ]
+
+
+            train_X = np.array(images_transform)
+            train_label = np.array(labels_transform)
+
+
+
+        self.history = self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose, validation_data=(valid_X, valid_label))
  
         # guardamos la red, para reutilizarla en el futuro, sin tener que volver a entrenar
         self.model.save("model.h5py")
-        
+
+
+
     def evaluate(self,verbose=1):
 
         train_X,test_X,train_Y,test_Y = train_test_split(self.X,self.y,test_size=0.2)
@@ -168,7 +198,9 @@ class LetterClasifier:
          
         print('Test loss:', test_eval[0])
         print('Test accuracy:', test_eval[1])
-        
+
+
+
     def show(self):
         
         train_X,test_X,train_Y,test_Y = train_test_split(self.X,self.y,test_size=0.2)
@@ -186,15 +218,24 @@ class LetterClasifier:
 if __name__ == "__main__":
     
     m = LetterClasifier()
-    m.load_images(verbose=0)
-    m.train(epochs = 400,batch_size = 128,verbose=1)
+    m.load_images(verbose=0, background=1)
+    m.train(epochs=400, batch_size=128, verbose=1, transform=1)
     m.evaluate(verbose=0)
     m.show()
 
     try:
+
+        if int(keras.__version__.split('.')[0]) >= 2:
+
+            plt.plot(m.history.history['accuracy'])
+            plt.plot(m.history.history['val_accuracy'])
         
-        plt.plot(m.history.history['acc'])
-        plt.plot(m.history.history['val_acc'])
+        else:
+
+            plt.plot(m.history.history['acc'])
+            plt.plot(m.history.history['val_acc'])
+
+
         plt.title('model accuracy')
         plt.ylabel('accuracy')
         plt.xlabel('epoch')
@@ -208,5 +249,6 @@ if __name__ == "__main__":
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
         plt.show()
+
     except:
         pass
