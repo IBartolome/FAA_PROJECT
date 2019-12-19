@@ -4,6 +4,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+# from sklearn.cross_validation import train_test_split
 import keras
 from keras.utils import to_categorical
 from keras.models import Sequential
@@ -11,7 +12,7 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 
-from utils import delete_background, transform_image
+from utils import delete_background, transform_image, center_image
 
 
 class LetterClasifier:
@@ -74,7 +75,7 @@ class LetterClasifier:
         return model
 
         
-    def load_images(self, dirname="out/", verbose=1, background=1):
+    def load_images(self, dirname="out/", verbose=1, background=1, center=1):
         '''
         Carga las imagenes.
 
@@ -97,9 +98,19 @@ class LetterClasifier:
 
 
             # Si el flag está activo elimina el fondo
-            if background == 1:
+            if background:
+
+                if verbose:
+                    print("Transformando la imagen a colores binarios (0, 1).")
 
                 image = delete_background(image)
+
+            if center:
+
+                if verbose:
+                    print("Centrando las imágenes según el centro de masas.")
+
+                image = center_image(image)
 
             
             # Guarda la imagen y la clase.
@@ -158,7 +169,9 @@ class LetterClasifier:
 
 
 
-        train_X,valid_X,train_label,valid_label = train_test_split(train_X, train_Y_one_hot, test_size=test_size, random_state=13)
+        train_X, valid_X, train_label, valid_label = train_test_split(train_X, train_Y_one_hot, test_size=test_size, random_state=13)
+
+        # print(train_X.shape)
 
         if verbose:
             print(train_X.shape,valid_X.shape,train_label.shape,valid_label.shape)
@@ -218,8 +231,8 @@ class LetterClasifier:
 if __name__ == "__main__":
     
     m = LetterClasifier()
-    m.load_images(verbose=0, background=1)
-    m.train(epochs=400, batch_size=128, verbose=1, transform=1)
+    m.load_images(verbose=0, background=1, center=1)
+    m.train(epochs=100, batch_size=128, verbose=1, transform=1)
     m.evaluate(verbose=0)
     m.show()
 

@@ -20,24 +20,51 @@ def delete_background(img):
 def transform_image(img):
 
     images = []
+    t_form = []
 
-    # t1_form = tf.AffineTransform(scale=(1.5, 1.3), shear=0.2)
-    t2_form = tf.AffineTransform(scale=(2.4, 2.2), translation=(-60, -80))
-    # t3_form = tf.AffineTransform(scale=(3, 2.8), translation=(-60, -80))
-    # t4_form = tf.AffineTransform(shear=0.2, translation=(30, 0))
-    # t5_form = tf.AffineTransform(scale=(1.5, 1.3), shear=-0.2, translation=(-50, 0))
-    # t6_form = tf.AffineTransform(scale=(1.4, 1.2), rotation=0.2)
-    t7_form = img * np.random.random_sample(img.shape)
+    t_form.append( tf.AffineTransform(scale=(1.2, 1), shear=0.2) )
+    t_form.append( tf.AffineTransform(scale=(1.2, 1), shear=-0.2) )
+
+    t7_form = img * np.random.choice([0, 1], img.shape, p=[0.1, 0.9])
+    t8_form = img * np.random.choice([0, 1], img.shape, p=[0.25, 0.75])
 
 
     images.append( img )
 
-    # images.append( tf.warp(img, t1_form) )
-    images.append( tf.warp(img, t2_form) )
-    # images.append( tf.warp(img, t3_form) )
-    # images.append( tf.warp(img, t4_form) )
-    # images.append( tf.warp(img, t5_form) )
-    # images.append( tf.warp(img, t6_form) )
+
+    for n_form in t_form:
+
+        img_tf = tf.warp(img, n_form)
+
+        img_tf[(img_tf > 0.6)] = 1
+        img_tf[(img_tf <= 0.6)] = 0
+
+        img_tf = center_image( img_tf )
+
+        images.append( img_tf )    
+
+
     images.append( t7_form )
+    images.append( t8_form )
 
     return images
+
+
+def center_image(img):
+
+    cm = ndimage.measurements.center_of_mass(img)
+
+    tform = np.zeros(img.shape)
+
+    real_y = int(img.shape[0] / 2)
+    real_x = int(img.shape[1] / 2)
+
+    actu_y = int(cm[0])
+    actu_x = int(cm[1])
+
+    move_y = real_y - actu_y
+    move_x = real_x - actu_x
+
+    tf_form = tf.AffineTransform(translation=(-move_x, -move_y))
+
+    return tf.warp(img, tf_form)
