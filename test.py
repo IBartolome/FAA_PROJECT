@@ -37,11 +37,11 @@ def transform_image(img):
     images = []
     t_form = []
 
-    # t_form.append( tf.AffineTransform(scale=(1.2, 1), shear=0.2) )
-    # t_form.append( tf.AffineTransform(scale=(1.2, 1), shear=-0.2) )
+    t_form.append( tf.AffineTransform(scale=(1.2, 1), shear=0.2) )
+    t_form.append( tf.AffineTransform(scale=(1.2, 1), shear=-0.2) )
 
-    # t_form.append( tf.AffineTransform(rotation=0.2) )
-    # t_form.append( tf.AffineTransform(rotation=0.2) )
+    t_form.append( tf.AffineTransform(rotation=0.2) )
+    t_form.append( tf.AffineTransform(rotation=0.2) )
 
     # t2_form = tf.AffineTransform(scale=(2.4, 2.2), translation=(-60, -80))
     # t3_form = tf.AffineTransform(scale=(3, 2.8), translation=(-60, -80))

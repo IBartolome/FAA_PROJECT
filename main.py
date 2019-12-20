@@ -232,7 +232,7 @@ if __name__ == "__main__":
     
     m = LetterClasifier()
     m.load_images(verbose=0, background=1, center=1)
-    m.train(epochs=100, batch_size=128, verbose=1, transform=1)
+    m.train(epochs=100, batch_size=128, verbose=1, transform=0)
     m.evaluate(verbose=0)
     m.show()
 
