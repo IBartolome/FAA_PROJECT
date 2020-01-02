@@ -96,8 +96,8 @@ class LetterClasifier:
         for filename in os.listdir(dirname):
 
             image = plt.imread(dirname + filename)
-
-
+            if len(image.shape)>2:
+                image = np.average(image, weights=[0.299, 0.587, 0.114], axis=2)
             # Si el flag está activo elimina el fondo
             if background:
 
@@ -144,7 +144,7 @@ class LetterClasifier:
 
     def train(self, epochs = 50, batch_size = 128, test_size=0.2, verbose=1, transform=1):
 
-        if os.path.exists("model.h5py"):
+        if os.path.exists("model_lenet_more.h5py"):
             self.load()
             return -1
 
@@ -199,7 +199,7 @@ class LetterClasifier:
         self.history = self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose, validation_data=(valid_X, valid_label))
 
         # guardamos la red, para reutilizarla en el futuro, sin tener que volver a entrenar
-        self.model.save("model.h5py")
+        self.model.save("model_lenet_more.h5py")
 
 
 
@@ -244,15 +244,16 @@ if __name__ == "__main__":
         m.setModel(models[sys.argv[1]](obj=m))
 
     m.train(epochs=100, batch_size=128, verbose=1, transform=0)
-    m.evaluate(verbose=0)
+    m.evaluate(verbose=1)
     m.show()
 
     try:
 
         if int(keras.__version__.split('.')[0]) >= 2:
-
-            plt.plot(m.history.history['accuracy'])
-            plt.plot(m.history.history['val_accuracy'])
+            print('pasa por aqui')
+            print(m.history.history['acc'])
+            plt.plot(m.history.history['acc'])
+            plt.plot(m.history.history['val_acc'])
         else:
 
             plt.plot(m.history.history['acc'])
@@ -275,3 +276,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         print('Exception Error: ', e)
+        pass
