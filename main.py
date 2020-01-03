@@ -144,7 +144,7 @@ class LetterClasifier:
 
     def train(self, epochs = 50, batch_size = 128, test_size=0.2, verbose=1, transform=1):
 
-        if os.path.exists("model_lenet_more.h5py"):
+        if os.path.exists("model_lenet_more2.h5py"):
             self.load()
             return -1
 
@@ -199,7 +199,7 @@ class LetterClasifier:
         self.history = self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose, validation_data=(valid_X, valid_label))
 
         # guardamos la red, para reutilizarla en el futuro, sin tener que volver a entrenar
-        self.model.save("model_lenet_more.h5py")
+        self.model.save("model_lenet_more2.h5py")
 
 
 
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2 and sys.argv[1] in models:
         m.setModel(models[sys.argv[1]](obj=m))
 
-    m.train(epochs=100, batch_size=128, verbose=1, transform=0)
+    m.train(epochs=60, batch_size=128, verbose=1, transform=0)
     m.evaluate(verbose=1)
     m.show()
 

@@ -7,12 +7,11 @@ from keras.preprocessing.image import ImageDataGenerator, img_to_array, load_img
 
 # generar mas imagenes
 datagen = ImageDataGenerator(
-    rotation_range=40,
+    rotation_range=20,
     width_shift_range=0.2,
     height_shift_range=0.2,
     shear_range=0.2,
     zoom_range=0.2,
-    horizontal_flip=True,
     fill_mode='nearest'
 )
 
@@ -26,4 +25,4 @@ for filename in os.listdir('out/'):
     i = 0
     for batch in datagen.flow(x, save_to_dir='out/more',save_prefix=filename[-5]):
         i += 1
-        if i >20: break
+        if i >5: break
