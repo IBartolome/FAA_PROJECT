@@ -45,23 +45,23 @@ Los resultados que se obtuvieron con esta arquitectura son los siguientes:
 
 Captura de pantalla donde el programa reconoce correctamente la letra 'e'.
 
-![97%](/home/hnko/Desktop/97%.png)
+![97%](/images/97%.png)
 
 
 
 Si miramos la terminal, vemos que el accuracy del modelo fue del 97%.
 
-![](/home/hnko/Desktop/zoom-accuracy97%.png)
+![](/images/zoom-accuracy97%.png)
 
 
 
 Loss del modelo:
 
-![](/home/hnko/Desktop/97%_loss.png)
+![](/images/97%_loss.png)
 
 Accuracy del modelo:
 
-![97%_accuracy](/home/hnko/Desktop/97%_accuracy.png)
+![97%_accuracy](/images/97%_accuracy.png)
 
 
 
@@ -90,7 +90,7 @@ ImageDataGenerator(
 
 Mostramos a continuación un ejemplo:
 
-![](/home/hnko/Desktop/u-lenet5.png)
+![](/images/u-lenet5.png)
 
 Podemos observar que la letra está desplaza para arriba-izquierda y el espacio que deja al desplazarse se rellena con los valores más cercanos, como se especificó en fill_mode='nearest'.
 
