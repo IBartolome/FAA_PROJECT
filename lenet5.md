@@ -45,23 +45,23 @@ Los resultados que se obtuvieron con esta arquitectura son los siguientes:
 
 Captura de pantalla donde el programa reconoce correctamente la letra 'e'.
 
-![97%](/images/97%.png)
+![97%](/images/97.png)
 
 
 
 Si miramos la terminal, vemos que el accuracy del modelo fue del 97%.
 
-![zoom](/images/zoom-accuracy97%.png)
+![zoom](/images/zoom-accuracy97.png)
 
 
 
 Loss del modelo:
 
-![loss](/images/97%_loss.png)
+![loss](/images/97_loss.png)
 
 Accuracy del modelo:
 
-![accuracy](/images/97%_accuracy.png)
+![accuracy](/images/97_accuracy.png)
 
 
 
