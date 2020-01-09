@@ -96,3 +96,9 @@ Podemos observar que la letra está desplaza para arriba-izquierda y el espacio 
 
 
 
+#### Análisis del dataset resultante
+
+Se comentó anteriormente que es importante que el conjunto de datos para cada categoría sea uniforme, para no caer en un posible overfitting. Tras ampliar el dataset original, la frecuencia con la que aparece cada categória en el dataset es el siguiente:
+
+![](/home/hnko/Desktop/FAA_PROJECT/images/freq_out_more.png)
+
