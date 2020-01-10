@@ -14,7 +14,10 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 
 from utils import delete_background, transform_image, center_image
-from lenet5 import lenet5
+# from lenet5 import lenet5
+
+MODEL_NAME = "model.h5py"  # "model_lenet_more2.h5py"
+
 
 class LetterClasifier:
 
@@ -144,7 +147,7 @@ class LetterClasifier:
 
     def train(self, epochs = 50, batch_size = 128, test_size=0.2, verbose=1, transform=1):
 
-        if os.path.exists("model_lenet_more2.h5py"):
+        if os.path.exists(MODEL_NAME):
             self.load()
             return -1
 
@@ -199,7 +202,7 @@ class LetterClasifier:
         self.history = self.model.fit(train_X, train_label, batch_size=batch_size,epochs=epochs,verbose=verbose, validation_data=(valid_X, valid_label))
 
         # guardamos la red, para reutilizarla en el futuro, sin tener que volver a entrenar
-        self.model.save("model_lenet_more2.h5py")
+        self.model.save(MODEL_NAME)
 
 
 
@@ -223,14 +226,14 @@ class LetterClasifier:
         plt.imshow(train_X[0][0], cmap='gray')
         plt.show()
 
-    def load(self,filename="model.h5py"):
+    def load(self,filename=MODEL_NAME):
         print("Cargado el modelo")
         self.model.load_weights(filename)
 
 
 
 #modelos a elegir
-models = {'lenet5':lenet5}
+# models = {'lenet5':lenet5}
 
 if __name__ == "__main__":
 
@@ -250,10 +253,11 @@ if __name__ == "__main__":
     try:
 
         if int(keras.__version__.split('.')[0]) >= 2:
-            print('pasa por aqui')
-            print(m.history.history['acc'])
-            plt.plot(m.history.history['acc'])
-            plt.plot(m.history.history['val_acc'])
+
+            print(m.history.history['accuracy'])
+            
+            plt.plot(m.history.history['accuracy'])
+            plt.plot(m.history.history['val_accuracy'])
         else:
 
             plt.plot(m.history.history['acc'])

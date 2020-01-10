@@ -12,7 +12,7 @@ def delete_background(img):
     tranf[(img > 0.6)] = 0
     tranf[(img <= 0.6)] = 1
 
-    tranf = morphology.binary_opening(tranf)
+    tranf = morphology.binary_opening(tranf, selem=np.ones((4, 4)))
 
     return tranf
 

@@ -11,4 +11,6 @@ pip install tensorflow==1.12.0
 
 pip install keras==2.2.0
 
+pip install scikit-image
+
 
