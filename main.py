@@ -14,7 +14,7 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.layers.advanced_activations import LeakyReLU
 
 from utils import delete_background, transform_image, center_image
-# from lenet5 import lenet5
+from lenet5 import lenet5
 
 MODEL_NAME = "model.h5py"  # "model_lenet_more2.h5py"
 
@@ -146,7 +146,8 @@ class LetterClasifier:
 
 
     def train(self, epochs = 50, batch_size = 128, test_size=0.2, verbose=1, transform=1):
-
+        #Si se quiere cargar el modelo lenet5 u otro, silenciar estas 3 lineas,
+        #sino dara un error de compatibilidades de arquitectura.
         if os.path.exists(MODEL_NAME):
             self.load()
             return -1
@@ -233,7 +234,7 @@ class LetterClasifier:
 
 
 #modelos a elegir
-# models = {'lenet5':lenet5}
+models = {'lenet5':lenet5}
 
 if __name__ == "__main__":
 
